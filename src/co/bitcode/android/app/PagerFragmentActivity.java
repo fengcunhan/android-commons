@@ -17,6 +17,7 @@
 package co.bitcode.android.app;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 
@@ -35,20 +36,14 @@ public abstract class PagerFragmentActivity extends FragmentActivity {
     /** Name of the Intent extra to use when requesting a different page. */
     public static final String EXTRA_FRAGMENT_PAGE = "fragmentPage";
 
-    private boolean isFirstTime;
     private ViewPager viewPager;
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onPostCreate(final Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
 
         ensurePager();
-
-        if (this.isFirstTime) {
-            switchToFragment(getIntent());
-
-            this.isFirstTime = false;
-        }
+        switchToFragment(getIntent());
     }
 
     /**
