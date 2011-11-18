@@ -35,6 +35,7 @@ public abstract class PagerFragmentActivity extends FragmentActivity {
     /** Name of the Intent extra to use when requesting a different page. */
     public static final String EXTRA_FRAGMENT_PAGE = "fragmentPage";
 
+    private boolean isFirstTime;
     private ViewPager viewPager;
 
     @Override
@@ -42,7 +43,12 @@ public abstract class PagerFragmentActivity extends FragmentActivity {
         super.onStart();
 
         ensurePager();
-        switchToFragment(getIntent());
+
+        if (this.isFirstTime) {
+            switchToFragment(getIntent());
+
+            this.isFirstTime = false;
+        }
     }
 
     /**
