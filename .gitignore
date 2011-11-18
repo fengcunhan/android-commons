@@ -1,0 +1,11 @@
+.DS_Store
+.classpath
+.project
+.releasekey
+Thumbs.db
+desktop.ini
+
+.settings/
+bin/
+gen/
+target/

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+    Android Utilities
+    Copyright (C) 2010, 2011  Lorenzo Villani
+
+    This library is free software: you can redistribute it and/or modify it under
+    the terms of the GNU Lesser General Public License as published by the Free
+    Software Foundation, version 3 of the License.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT ANY
+    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+    PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License along
+    with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<resources>
+    <string name="dialog_error_title">Error</string>
+    <string name="eula_accept">Accept</string>
+    <string name="eula_refuse">Refuse</string>
+    <string name="eula_title">License Agreement</string>
+    
+    <string name="view_fuzzydate_seconds">Moments ago</string>
+    <string name="view_fuzzydate_minutes">%d\' ago</string>
+    <string name="view_fuzzydate_hours">%d hours ago</string>
+    <string name="view_fuzzydate_days">%d days ago</string>
+    <string name="view_fuzzydate_other">%s</string>
+    
+    <string name="generic_loading">Loading</string>
+    <string name="previewpreference_notSet">Not set.</string>
+</resources>
