@@ -1,0 +1,15 @@
+Design Principles
+-----------------
+
+Many all-around Android libraries require invasive changes to the hosting
+application to work, i.e.: they often require that you inherit from a
+customized Application class.
+
+For example: both Droid-Fu and GreenDroid have their custom class which inherits
+from android.app.Application which is required for them to work properly. This
+design decision will needlessly cause these two libraries to step on each other
+toes when used inside the same project.
+
+We take a different approach: our library consists of loosely coupled components
+and helpers (such as our optional subclass of android.app.Application) which
+provide shortcuts to access additional features at developers discretion.
