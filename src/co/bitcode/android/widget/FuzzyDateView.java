@@ -19,6 +19,7 @@ package co.bitcode.android.widget;
 import java.util.Date;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -86,9 +87,7 @@ public class FuzzyDateView extends TextView {
      * @since 1.0.0
      */
     public void setText(final Date sourceDate) {
-        final long delta = Math.abs(new Date().getTime() - sourceDate.getTime());
-
-        super.setText(getFormattedQuantity(delta));
+        super.setText(getFormattedQuantity(sourceDate));
     }
 
     /**
@@ -102,8 +101,22 @@ public class FuzzyDateView extends TextView {
         setText(ISODateFormatter.parseISODateAndTime(isoDate));
     }
 
-    private String getFormattedQuantity(final long delta) {
-        return String.format(getFormatString(delta), getQuantity(delta));
+    private String getFormattedQuantity(final Date sourceDate) {
+        final long sourceTime = sourceDate.getTime();
+        final long delta = Math.abs(new Date().getTime() - sourceTime);
+        final int quantity = getQuantity(delta);
+
+        if (delta < MINUTE) {
+            return getString(R.string.view_fuzzydate_moments);
+        } else if (delta < HOUR) {
+            return getQuantityString(R.plurals.view_fuzzydate_minute, quantity);
+        } else if (delta < DAY) {
+            return getQuantityString(R.plurals.view_fuzzydate_hours, quantity);
+        } else if (delta < WEEK) {
+            return getQuantityString(R.plurals.view_fuzzydate_day, quantity);
+        } else {
+            return DateUtils.formatDateTime(getContext(), sourceTime, DateUtils.LENGTH_SHORT);
+        }
     }
 
     private int getQuantity(final long delta) {
@@ -114,21 +127,15 @@ public class FuzzyDateView extends TextView {
         } else if (delta < WEEK) {
             return (int) delta / DAY;
         } else {
-            return 1;
+            return (int) delta;
         }
     }
 
-    private String getFormatString(final long delta) {
-        if (delta < MINUTE) {
-            return getContext().getString(R.string.view_fuzzydate_seconds);
-        } else if (delta < HOUR) {
-            return getContext().getString(R.string.view_fuzzydate_minutes);
-        } else if (delta < DAY) {
-            return getContext().getString(R.string.view_fuzzydate_hours);
-        } else if (delta < WEEK) {
-            return getContext().getString(R.string.view_fuzzydate_days);
-        } else {
-            return getContext().getString(R.string.view_fuzzydate_other);
-        }
+    private String getString(final int resId) {
+        return getContext().getString(resId);
+    }
+
+    private String getQuantityString(final int resId, final int quantity) {
+        return getContext().getResources().getQuantityString(resId, quantity, quantity);
     }
 }

@@ -23,10 +23,7 @@
     <string name="eula_refuse">Refuse</string>
     <string name="eula_title">License Agreement</string>
     
-    <string name="view_fuzzydate_seconds">Moments ago</string>
-    <string name="view_fuzzydate_minutes">%d\' ago</string>
-    <string name="view_fuzzydate_hours">%d hours ago</string>
-    <string name="view_fuzzydate_days">%d days ago</string>
+    <string name="view_fuzzydate_moments">Moments ago</string>
     <string name="view_fuzzydate_other">%s</string>
     
     <string name="generic_loading">Loading</string>

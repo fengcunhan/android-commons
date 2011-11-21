@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="view_fuzzydate_second">
+        <item quantity="one">1\'\' ago</item>
+        <item quantity="other">%d\'\' ago</item>
+    </plurals>
+    <plurals name="view_fuzzydate_minute">
+        <item quantity="one">1\' ago</item>
+        <item quantity="other">%d\' ago</item>
+    </plurals>
+    <plurals name="view_fuzzydate_hours">
+        <item quantity="one">1 hour ago</item>
+        <item quantity="other">%d hours ago</item>
+    </plurals>
+    <plurals name="view_fuzzydate_day">
+        <item quantity="one">1 day ago</item>
+        <item quantity="other">%d days ago</item>
+    </plurals>
+</resources>
