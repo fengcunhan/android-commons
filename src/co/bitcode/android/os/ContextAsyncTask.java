@@ -17,9 +17,20 @@
 package co.bitcode.android.os;
 
 import android.content.Context;
+import android.util.Log;
+
+import co.bitcode.android.app.observable.ObservableActivity;
+import co.bitcode.android.app.observable.OnDestroyListener;
 
 /**
  * An AsyncTask which holds a reference to a parent {@link Context}.
+ * 
+ * In case our parent {@link Context} is an {@link ObservableActivity}, we set-up an
+ * {@link OnDestroyListener} which is used to cancel this task whenever the parent activity is
+ * destroyed.
+ * 
+ * Note that we preserve the original {@link OnDestroyListener} and that we cancel the task after
+ * the original handler has been called.
  * 
  * @param <Params>
  *        The type of the parameters sent to the task upon execution.
@@ -39,9 +50,36 @@ public abstract class ContextAsyncTask<Params, Result> extends AsyncTask<Params,
      */
     public ContextAsyncTask(final Context context) {
         this.context = context;
+
+        if (context instanceof ObservableActivity) {
+            setUpDestroyListener((ObservableActivity) context);
+        }
     }
 
     public Context getContext() {
         return this.context;
+    }
+
+    private void setUpDestroyListener(final ObservableActivity context) {
+        final OnDestroyListener originalListener = context.getOnDestroyListener();
+
+        context.setOnDestroyListener(new OnDestroyListener() {
+            @Override
+            public void onDestroy() {
+                if (originalListener != null) {
+                    originalListener.onDestroy();
+                }
+
+                cancelTask();
+            }
+        });
+    }
+
+    private void cancelTask() {
+        if (!isCancelled()) {
+            Log.d(getClass().getName(), "Parent Context looks dead. Cancelling task");
+
+            cancel(true);
+        }
     }
 }
