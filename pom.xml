@@ -3,8 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>co.bitcode.android</groupId>
     <artifactId>android-utilities</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <packaging>apklib</packaging>
+    <version>1.0.0-SNAPSHOT</version>
     
     
     <name>Android Utilities</name>
@@ -37,8 +36,8 @@
             <!-- Android -->
             <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-                <artifactId>maven-android-plugin</artifactId>
-                <version>3.0.0-alpha-3</version>
+                <artifactId>android-maven-plugin</artifactId>
+                <version>3.0.0-alpha-14</version>
                 <extensions>true</extensions>
             </plugin>
             <!-- Compiler -->
