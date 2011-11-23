@@ -10,3 +10,11 @@ reports.
 Home Page: https://bitbucket.org/lvillani/android-utilities/
 Wiki: https://bitbucket.org/lvillani/android-utilities/wiki/Home
 Issue Tracker: https://bitbucket.org/lvillani/android-utilities/issues?status=new&status=open
+
+
+
+
+Stability
+---------
+
+The API is not considered stable and is subject to changes/removals. Use it at your own risk.
