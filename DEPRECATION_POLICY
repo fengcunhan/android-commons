@@ -1,0 +1,7 @@
+Deprecation Policy
+------------------
+
+Support for older versions of the Android platform is dropped after it reaches
+diffusion levels below 15% according to the "Platform Versions" document [1].
+
+[1]: http://developer.android.com/resources/dashboard/platform-versions.html
