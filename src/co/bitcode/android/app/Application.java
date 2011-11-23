@@ -14,7 +14,11 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.bitcode.android;
+package co.bitcode.android.app;
+
+import java.util.logging.Logger;
+
+import co.bitcode.android.util.LoggerFactory;
 
 /**
  * Extends {@link android.app.Application} to provide utility methods.
@@ -24,18 +28,21 @@ package co.bitcode.android;
  */
 public class Application extends android.app.Application {
     private static Application instance;
+    private static Logger logger;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         instance = this;
+        logger = LoggerFactory.fromContext(this);
     }
 
-    /**
-     * @return An instance of this Application object.
-     */
     public static Application getInstance() {
         return instance;
+    }
+
+    public static Logger getLogger() {
+        return logger;
     }
 }

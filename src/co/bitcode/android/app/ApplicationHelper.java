@@ -14,7 +14,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.bitcode.android;
+package co.bitcode.android.app;
 
 import java.util.List;
 
