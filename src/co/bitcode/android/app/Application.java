@@ -16,6 +16,7 @@
 
 package co.bitcode.android.app;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import co.bitcode.android.util.LoggerFactory;
@@ -44,5 +45,29 @@ public class Application extends android.app.Application {
 
     public static Logger getLogger() {
         return logger;
+    }
+
+    /**
+     * @param logLevel
+     *        The level of the specified message.
+     * @param message
+     *        The message to log.
+     * @see Logger#log(Level, String)
+     */
+    public static void log(final Level logLevel, final String message) {
+        logger.log(logLevel, message);
+    }
+
+    /**
+     * @param logLevel
+     *        The level of the specified message.
+     * @param message
+     *        The message to log.
+     * @param params
+     *        The parameter array associated with the event that is logged.
+     * @see Logger#log(Level, String, Object[])
+     */
+    public static void log(final Level logLevel, final String message, final Object... params) {
+        logger.log(logLevel, message, params);
     }
 }
