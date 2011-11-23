@@ -17,7 +17,6 @@
 package co.bitcode.android.os;
 
 import android.content.Context;
-import android.util.Log;
 
 import co.bitcode.android.app.observable.ObservableActivity;
 import co.bitcode.android.app.observable.OnDestroyListener;
@@ -77,8 +76,6 @@ public abstract class ContextAsyncTask<Params, Result> extends AsyncTask<Params,
 
     private void cancelTask() {
         if (!isCancelled()) {
-            Log.d(getClass().getName(), "Parent Context looks dead. Cancelling task");
-
             cancel(true);
         }
     }
