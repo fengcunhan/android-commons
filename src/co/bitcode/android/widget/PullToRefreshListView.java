@@ -156,7 +156,7 @@ public class PullToRefreshListView extends ListView implements OnClickListener, 
 
     @Override
     public void onClick(final View v) {
-        if (isEmpty()) {
+        if (!this.isRefreshing) {
             refresh();
         }
     }
