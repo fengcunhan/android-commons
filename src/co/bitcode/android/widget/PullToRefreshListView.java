@@ -24,8 +24,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -33,6 +31,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import co.bitcode.android.R;
+import co.bitcode.android.view.animation.CollapseAnimation;
 
 /**
  * Pull-to-refresh {@link ListView}.
@@ -40,18 +39,19 @@ import co.bitcode.android.R;
  * @since 1.0.0
  * @author Lorenzo Villani
  */
-public class PullToRefreshListView extends ListView implements OnClickListener, OnScrollListener {
+public class PullToRefreshListView extends ListView implements OnClickListener {
     private Animation rotateDownwards;
     private Animation rotateUpwards;
-    private View header;
+    private CollapseAnimation collapseAnimation;
     private ImageView arrow;
     private ProgressBar progressBar;
     private TextView message;
+    private View header;
 
     private boolean isActivated;
     private boolean isRefreshing;
-    private int activationThreshold;
-    private int scrollState = OnScrollListener.SCROLL_STATE_IDLE;
+    private int measuredHeight;
+    private int lastDragStartY;
     private OnRefreshListener onRefreshListener;
 
     /* CHECKSTYLE IGNORE ALL CHECKS FOR NEXT 2 LINES */
@@ -128,8 +128,8 @@ public class PullToRefreshListView extends ListView implements OnClickListener, 
         if (isEmpty()) {
             setEmptyHeader();
         } else {
-            resetHeader();
-            setSelection(1);
+            collapseHeader();
+            hideProgressBar();
         }
     }
 
@@ -156,7 +156,8 @@ public class PullToRefreshListView extends ListView implements OnClickListener, 
 
     @Override
     public void onClick(final View v) {
-        if (!this.isRefreshing) {
+        // Click events enabled only when "Tap to refresh" is shown.
+        if (isEmpty()) {
             refresh();
         }
     }
@@ -165,54 +166,28 @@ public class PullToRefreshListView extends ListView implements OnClickListener, 
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        // CHECKSTYLE IGNORE ALL CHECKS NEXT LINE
-        this.activationThreshold = (7 * this.header.getMeasuredHeight()) / 8;
-    }
-
-    @Override
-    public void onScroll(final AbsListView view, final int firstVisibleItem,
-            final int visibleItemCount, final int totalItemCount) {
-        // XXX: find a way to preserve short circuits AND have Eclipse break each expression on its
-        // own line to make things readable.
-        boolean isEventInteresting = this.scrollState == SCROLL_STATE_TOUCH_SCROLL;
-
-        isEventInteresting &= firstVisibleItem == 0;
-        isEventInteresting &= !this.isRefreshing;
-
-        if (isEventInteresting) {
-            final boolean isInActivationZone = this.header.getBottom() >= this.activationThreshold;
-
-            if (!this.isActivated && isInActivationZone) {
-                activateRefresh();
-            } else if (!isInActivationZone && this.isActivated) {
-                deactivateRefresh();
-            }
-        } else if ((this.scrollState == SCROLL_STATE_FLING) && (firstVisibleItem == 0)) {
-            setSelection(1);
+        if ((this.measuredHeight == 0) && (this.header.getMeasuredHeight() != 0)) {
+            this.measuredHeight = this.header.getMeasuredHeight();
         }
-    }
-
-    @Override
-    public void onScrollStateChanged(final AbsListView view, final int scrollState) {
-        this.scrollState = scrollState;
     }
 
     @Override
     public boolean onTouchEvent(final MotionEvent ev) {
-        // XXX: find a way to preserve short circuits AND have Eclipse break each expression on its
-        // own line to make things readable.
-        boolean isEventInteresting = getFirstVisiblePosition() == 0;
-
-        isEventInteresting &= ev.getAction() == MotionEvent.ACTION_UP;
-        isEventInteresting &= this.isActivated;
-
-        if (isEventInteresting) {
-            refresh();
-
-            return true;
-        } else {
-            return super.onTouchEvent(ev);
+        if (!isEmpty() && !this.isRefreshing) {
+            if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+                this.lastDragStartY = (int) ev.getY();
+            } else if (ev.getAction() == MotionEvent.ACTION_MOVE) {
+                dragHeader(this.lastDragStartY, (int) ev.getY());
+            } else if (ev.getAction() == MotionEvent.ACTION_UP) {
+                if (this.isActivated) {
+                    refresh();
+                } else {
+                    collapseHeader();
+                }
+            }
         }
+
+        return super.onTouchEvent(ev);
     }
 
     @Override
@@ -225,9 +200,6 @@ public class PullToRefreshListView extends ListView implements OnClickListener, 
     }
 
     private void init() {
-        this.rotateDownwards = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_downwards);
-        this.rotateUpwards = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_upwards);
-
         this.header = getLayoutInflater().inflate(R.layout.row_header_pulltorefresh, null);
         this.header.setOnClickListener(this);
 
@@ -235,9 +207,12 @@ public class PullToRefreshListView extends ListView implements OnClickListener, 
         this.message = ViewUtils.find(this.header, R.id.row_header_pulltorefresh_message);
         this.progressBar = ViewUtils.find(this.header, R.id.row_header_pulltorefresh_progressbar);
 
+        this.collapseAnimation = new CollapseAnimation(this.header);
+        this.rotateDownwards = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_downwards);
+        this.rotateUpwards = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_upwards);
+
         addHeaderView(this.header, null, false);
         setEmptyHeader();
-        setOnScrollListener(this);
         setSmoothScrollbarEnabled(true);
     }
 
@@ -259,11 +234,35 @@ public class PullToRefreshListView extends ListView implements OnClickListener, 
         }
     }
 
-    private void resetHeader() {
-        this.arrow.clearAnimation();
-        this.arrow.setVisibility(View.VISIBLE);
-        this.message.setText(R.string.row_header_pulltorefresh_pullDown);
-        this.progressBar.setVisibility(View.INVISIBLE);
+    private void collapseHeader() {
+        // CHECKSTYLE IGNORE ALL CHECKS FOX NEXT 2 LINES
+        this.collapseAnimation.notifyHeightChanged();
+        this.header.startAnimation(this.collapseAnimation);
+    }
+
+    private void dragHeader(final int startY, final int newY) {
+        final int motionDelta = newY - startY;
+
+        if (motionDelta > 0) {
+            setHeaderHeight(motionDelta);
+
+            if (!this.isActivated && (this.measuredHeight != 0)
+                    && (motionDelta > this.measuredHeight)) {
+                activateRefresh();
+            }
+        }
+    }
+
+    private void resetHeaderHeight() {
+        setHeaderHeight(LayoutParams.WRAP_CONTENT);
+    }
+
+    private void setHeaderHeight(final int newHeight) {
+        if (this.header.getLayoutParams() != null) {
+            // CHECKSTYLE IGNORE ALL CHECKS NEXT LINE
+            this.header.getLayoutParams().height = newHeight;
+            this.header.requestLayout();
+        }
     }
 
     private void showProgressBar() {
@@ -271,6 +270,16 @@ public class PullToRefreshListView extends ListView implements OnClickListener, 
         this.arrow.setVisibility(View.INVISIBLE);
         this.message.setText(R.string.row_header_pulltorefresh_loading);
         this.progressBar.setVisibility(View.VISIBLE);
+
+        resetHeaderHeight();
+    }
+
+    private void hideProgressBar() {
+        this.arrow.clearAnimation();
+        this.arrow.setVisibility(View.VISIBLE);
+        this.progressBar.setVisibility(View.INVISIBLE);
+
+        deactivateRefresh();
     }
 
     private void activateRefresh() {
