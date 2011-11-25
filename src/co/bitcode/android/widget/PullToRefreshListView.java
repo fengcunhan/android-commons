@@ -192,7 +192,11 @@ public class PullToRefreshListView extends ListView implements OnClickListener {
             }
         }
 
-        return super.onTouchEvent(ev);
+        if (!this.isActivated) {
+            return super.onTouchEvent(ev);
+        } else {
+            return false;
+        }
     }
 
     @Override
