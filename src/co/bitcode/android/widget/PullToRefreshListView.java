@@ -98,7 +98,6 @@ public class PullToRefreshListView extends ListView implements OnClickListener {
      *        The default style.
      * @see android.view.View#View(Context, AttributeSet, int)
      */
-    /* CHECKSTYLE IGNORE ALL CHECKS NEXT LINE */
     public PullToRefreshListView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
 
@@ -106,7 +105,7 @@ public class PullToRefreshListView extends ListView implements OnClickListener {
     }
 
     /**
-     * Initiate loading.
+     * Notifies this object that we are initiating a refresh.
      * 
      * @since 1.0.0
      */
@@ -114,7 +113,7 @@ public class PullToRefreshListView extends ListView implements OnClickListener {
         this.isRefreshing = true;
 
         showProgressBar();
-        setSelection(0);
+        resetHeaderHeight();
     }
 
     /**
@@ -235,7 +234,6 @@ public class PullToRefreshListView extends ListView implements OnClickListener {
     }
 
     private void collapseHeader() {
-        // CHECKSTYLE IGNORE ALL CHECKS FOX NEXT 2 LINES
         this.collapseAnimation.notifyHeightChanged();
         this.header.startAnimation(this.collapseAnimation);
     }
@@ -271,8 +269,6 @@ public class PullToRefreshListView extends ListView implements OnClickListener {
         this.arrow.setVisibility(View.INVISIBLE);
         this.message.setText(R.string.row_header_pulltorefresh_loading);
         this.progressBar.setVisibility(View.VISIBLE);
-
-        resetHeaderHeight();
     }
 
     private void hideProgressBar() {
