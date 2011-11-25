@@ -234,7 +234,7 @@ public class PullToRefreshListView extends ListView implements OnClickListener {
     }
 
     private void collapseHeader() {
-        this.collapseAnimation.notifyHeightChanged();
+        this.collapseAnimation.collapseTo(this.header.getMeasuredHeight(), 1);
         this.header.startAnimation(this.collapseAnimation);
     }
 
