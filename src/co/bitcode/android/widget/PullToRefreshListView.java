@@ -178,7 +178,7 @@ public class PullToRefreshListView extends ListView implements OnClickListener {
 
     @Override
     public boolean onTouchEvent(final MotionEvent ev) {
-        if (!isEmpty() && !this.isRefreshing) {
+        if (!isEmpty() && !this.isRefreshing && (getFirstVisiblePosition() == 0)) {
             if (ev.getAction() == MotionEvent.ACTION_DOWN) {
                 this.lastDragStartY = (int) ev.getY();
             } else if (ev.getAction() == MotionEvent.ACTION_MOVE) {
