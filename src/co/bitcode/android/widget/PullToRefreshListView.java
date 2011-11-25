@@ -243,12 +243,13 @@ public class PullToRefreshListView extends ListView implements OnClickListener {
     private void dragHeader(final int startY, final int newY) {
         final int motionDelta = newY - startY;
 
-        if (motionDelta > 0) {
+        if ((motionDelta > 0) && (this.measuredHeight != 0)) {
             setHeaderHeight(motionDelta);
 
-            if (!this.isActivated && (this.measuredHeight != 0)
-                    && (motionDelta > this.measuredHeight)) {
+            if (!this.isActivated && (motionDelta > this.measuredHeight)) {
                 activateRefresh();
+            } else if (this.isActivated && (motionDelta < this.measuredHeight)) {
+                deactivateRefresh();
             }
         }
     }
