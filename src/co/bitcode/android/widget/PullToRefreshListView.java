@@ -113,7 +113,12 @@ public class PullToRefreshListView extends ListView implements OnClickListener {
         this.isRefreshing = true;
 
         showProgressBar();
-        resetHeaderHeight();
+
+        if (this.isActivated) {
+            animatedResetHeaderHeight();
+        } else {
+            resetHeaderHeight();
+        }
     }
 
     /**
@@ -129,6 +134,7 @@ public class PullToRefreshListView extends ListView implements OnClickListener {
         } else {
             collapseHeader();
             hideProgressBar();
+            deactivateRefresh();
         }
     }
 
@@ -252,6 +258,11 @@ public class PullToRefreshListView extends ListView implements OnClickListener {
         }
     }
 
+    private void animatedResetHeaderHeight() {
+        this.collapseAnimation.collapseTo(this.header.getMeasuredHeight(), this.measuredHeight);
+        this.header.startAnimation(this.collapseAnimation);
+    }
+
     private void resetHeaderHeight() {
         setHeaderHeight(LayoutParams.WRAP_CONTENT);
     }
@@ -275,8 +286,6 @@ public class PullToRefreshListView extends ListView implements OnClickListener {
         this.arrow.clearAnimation();
         this.arrow.setVisibility(View.VISIBLE);
         this.progressBar.setVisibility(View.INVISIBLE);
-
-        deactivateRefresh();
     }
 
     private void activateRefresh() {
