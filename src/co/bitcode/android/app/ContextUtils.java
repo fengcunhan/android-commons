@@ -18,6 +18,7 @@ package co.bitcode.android.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.view.LayoutInflater;
 
 /**
  * Provides utility methods to accomplish the most common tasks.
@@ -43,6 +44,18 @@ public final class ContextUtils {
      */
     public static SharedPreferences getPrivatePreferences(final Context context, final String name) {
         return context.getSharedPreferences(name, Context.MODE_PRIVATE);
+    }
+
+    /**
+     * Return the handle to the layout inflater service.
+     * 
+     * @param context
+     *        The {@link Context}.
+     * @return The {@link LayoutInflater}.
+     * @since 1.0.0
+     */
+    public static LayoutInflater getLayoutInflater(final Context context) {
+        return getService(context, Context.LAYOUT_INFLATER_SERVICE);
     }
 
     /**
