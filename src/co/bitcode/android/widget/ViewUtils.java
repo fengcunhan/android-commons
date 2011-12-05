@@ -16,6 +16,8 @@
 
 package co.bitcode.android.widget;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.view.View;
 
 /**
@@ -29,27 +31,56 @@ public final class ViewUtils {
     }
 
     /**
-     * Finds a {@link View} by ID.
-     * 
-     * NOTE: This method will throw a {@link NullPointerException} if the view could not be found.
+     * Finds a {@link View} inside an {@link Activity} content view.
      * 
      * @param <T>
-     *        Type of the widget.
-     * @param parent
-     *        The {@link View} that contains the widget we want to find.
+     *        Type of the {@link View}.
+     * @param activity
+     *        The {@link Activity}.
      * @param resId
-     *        The resource ID of the widget we want to find.
-     * @return A widget of type <code>&lt;T&gt;</code>.
-     * @since 1.0.0
+     *        {@link View} resource id.
+     * @return Found {@link View} (if any).
      */
-    @SuppressWarnings("unchecked")
-    public static <T> T find(final View parent, final int resId) {
-        final T ret = (T) parent.findViewById(resId);
+    public static <T> T find(final Activity activity, final int resId) {
+        return coherceNotNull(activity.findViewById(resId));
+    }
 
-        if (ret == null) {
+    /**
+     * Finds a {@link View} inside an {@link Activity} content view.
+     * 
+     * @param <T>
+     *        Type of the {@link View}.
+     * @param dialog
+     *        The {@link Dialog}.
+     * @param resId
+     *        {@link View} resource id.
+     * @return Found {@link View} (if any).
+     */
+    public static <T> T find(final Dialog dialog, final int resId) {
+        return coherceNotNull(dialog.findViewById(resId));
+    }
+
+    /**
+     * Finds a child view.
+     * 
+     * @param <T>
+     *        Type of the {@link View}.
+     * @param parent
+     *        The parent {@link View}.
+     * @param resId
+     *        {@link View} resource id.
+     * @return Found {@link View} (if any).
+     */
+    public static <T> T find(final View parent, final int resId) {
+        return coherceNotNull(parent.findViewById(resId));
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T coherceNotNull(final Object what) {
+        if (what == null) {
             throw new NullPointerException("Could not find a view with provided ID");
         } else {
-            return ret;
+            return (T) what;
         }
     }
 }
