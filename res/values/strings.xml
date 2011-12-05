@@ -19,9 +19,17 @@
 
 <resources>
     <string name="dialog_error_title">Error</string>
+    <string name="dialog_invitationcode">
+        This application is currently in closed beta testing phase. To continue, provide the
+        invitation code we sent you:
+    </string>
+    <string name="dialog_invitationcode_error">Invalid code.</string>
+    
     <string name="eula_accept">Accept</string>
     <string name="eula_refuse">Refuse</string>
     <string name="eula_title">License Agreement</string>
+    
+    <string name="intent_sendEmail">Send Email</string>
     
     <string name="view_fuzzydate_moments">Moments ago</string>
     <string name="view_fuzzydate_other">%s</string>
