@@ -28,32 +28,46 @@ import android.view.animation.Transformation;
  */
 public class CollapseAnimation extends Animation {
     private static final long DEFAULT_DURATION = 500;
-    private final View attachedView;
-    private int attachedViewHeight;
+    private final View view;
+    private int startHeight;
+    private int endHeight;
 
     /**
      * Constructor.
      * 
-     * @param attachedView
+     * @param view
      *        The {@link View} we want to animate.
      * @since 1.0.0
      */
-    public CollapseAnimation(final View attachedView) {
+    public CollapseAnimation(final View view) {
         super();
 
-        this.attachedView = attachedView;
-        this.attachedViewHeight = attachedView.getMeasuredHeight();
+        this.view = view;
 
         setDuration(DEFAULT_DURATION);
     }
 
     /**
-     * Refresh cached height for attached {@link View}.
+     * Sets collapse parameters for this animation.
      * 
+     * @param startHeight
+     *        Starting height.
+     * @param endHeight
+     *        The desired height at the end of the animation.
      * @since 1.0.0
      */
-    public void notifyHeightChanged() {
-        this.attachedViewHeight = this.attachedView.getMeasuredHeight();
+    public void collapseTo(final int startHeight, final int endHeight) {
+        if (startHeight < endHeight) {
+            throw new IllegalArgumentException("Starting height must be >= the ending height");
+        }
+
+        this.startHeight = startHeight;
+
+        if (endHeight < 1) {
+            this.endHeight = 1;
+        } else {
+            this.endHeight = endHeight;
+        }
     }
 
     @Override
@@ -63,10 +77,16 @@ public class CollapseAnimation extends Animation {
 
     @Override
     protected void applyTransformation(final float interpolatedTime, final Transformation t) {
-        final int newHeight = (int) (1 + (this.attachedViewHeight * (1 - interpolatedTime)));
+        final int h = (int) (1 + (this.startHeight * (1 - interpolatedTime)));
 
-        // CHECKSTYLE IGNORE ALL CHECKS NEXT LINE
-        this.attachedView.getLayoutParams().height = newHeight;
-        this.attachedView.requestLayout();
+        if (h > this.endHeight) {
+            // CHECKSTYLE IGNORE ALL CHECKS NEXT LINE
+            this.view.getLayoutParams().height = h;
+        } else {
+            // CHECKSTYLE IGNORE ALL CHECKS NEXT LINE
+            this.view.getLayoutParams().height = this.endHeight;
+        }
+
+        this.view.requestLayout();
     }
 }

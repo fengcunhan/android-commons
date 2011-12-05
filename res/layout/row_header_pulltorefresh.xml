@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
+
     Android Utilities
     Copyright (C) 2010, 2011  Lorenzo Villani
 
@@ -13,7 +14,9 @@
 
     You should have received a copy of the GNU Lesser General Public License along
     with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 -->
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
