@@ -118,18 +118,24 @@ public abstract class CategoryIndexer<E extends Enum<E>, L> implements SectionIn
      * @return The offset.
      */
     public int getOffset(final E category) {
-        final E[] categories = getSections();
-        int offset = 0;
+        if (getOptional(this.sectionFound, category, false)) {
+            final E[] categories = getSections();
+            int offset = 0;
 
-        for (final E single : categories) {
-            if ((!single.equals(category)) && (getOptional(this.sectionFound, single, false))) {
-                offset++;
-            } else {
-                break;
+            for (final E single : categories) {
+                if (!single.equals(category)) {
+                    if (getOptional(this.sectionFound, single, false)) {
+                        offset++;
+                    }
+                } else {
+                    break;
+                }
             }
-        }
 
-        return offset;
+            return offset;
+        } else {
+            return 0;
+        }
     }
 
     /**
