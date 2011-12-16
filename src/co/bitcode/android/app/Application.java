@@ -70,4 +70,17 @@ public class Application extends android.app.Application {
     public static void log(final Level logLevel, final String message, final Object... params) {
         logger.log(logLevel, message, params);
     }
+
+    /**
+     * @param logLevel
+     *        The level of the specified message.
+     * @param message
+     *        The message to log.
+     * @param thrown
+     *        The <code>Throwable</code> object associated with the event that is logged.
+     * @see Logger#log(Level, String, Throwable)
+     */
+    public static void log(final Level logLevel, final String message, final Throwable thrown) {
+        logger.log(logLevel, message, thrown);
+    }
 }
