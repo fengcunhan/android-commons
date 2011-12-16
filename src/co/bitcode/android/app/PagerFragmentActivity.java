@@ -39,6 +39,13 @@ public abstract class PagerFragmentActivity extends FragmentActivity {
     private ViewPager viewPager;
 
     @Override
+    protected void onNewIntent(final Intent intent) {
+        super.onNewIntent(intent);
+
+        switchToFragment(intent);
+    }
+
+    @Override
     protected void onPostCreate(final Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
