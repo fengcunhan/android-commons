@@ -19,6 +19,7 @@ package co.bitcode.android.widget;
 import android.app.Activity;
 import android.app.Dialog;
 import android.view.View;
+import android.view.View.OnClickListener;
 
 /**
  * Operations on {@link View}s.
@@ -28,6 +29,72 @@ import android.view.View;
  */
 public final class ViewUtils {
     private ViewUtils() {
+    }
+
+    /**
+     * Finds a {@link View} inside an {@link Activity} content view.
+     * 
+     * @param <T>
+     *        Type of the {@link View}.
+     * @param activity
+     *        The {@link Activity}.
+     * @param resId
+     *        {@link View} resource id.
+     * @param listener
+     *        The click listener to bind to the view.
+     * @return Found {@link View} (if any).
+     */
+    public static <T extends View> T bind(final Activity activity, final int resId,
+            final OnClickListener listener) {
+        final T found = find(activity, resId);
+
+        found.setOnClickListener(listener);
+
+        return found;
+    }
+
+    /**
+     * Finds a {@link View} inside an {@link Activity} content view.
+     * 
+     * @param <T>
+     *        Type of the {@link View}.
+     * @param dialog
+     *        The {@link Dialog}.
+     * @param resId
+     *        {@link View} resource id.
+     * @param listener
+     *        The click listener to bind to the view.
+     * @return Found {@link View} (if any).
+     */
+    public static <T extends View> T bind(final Dialog dialog, final int resId,
+            final OnClickListener listener) {
+        final T found = find(dialog, resId);
+
+        found.setOnClickListener(listener);
+
+        return found;
+    }
+
+    /**
+     * Finds a child view.
+     * 
+     * @param <T>
+     *        Type of the {@link View}.
+     * @param parent
+     *        The parent {@link View}.
+     * @param resId
+     *        {@link View} resource id.
+     * @param listener
+     *        The click listener to bind to the view.
+     * @return Found {@link View} (if any).
+     */
+    public static <T extends View> T bind(final View parent, final int resId,
+            final OnClickListener listener) {
+        final T found = find(parent, resId);
+
+        found.setOnClickListener(listener);
+
+        return found;
     }
 
     /**
