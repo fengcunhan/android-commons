@@ -115,7 +115,7 @@ public class FuzzyDateView extends TextView {
         } else if (delta < WEEK) {
             return getQuantityString(R.plurals.view_fuzzydate_day, quantity);
         } else {
-            return DateUtils.formatDateTime(getContext(), sourceTime, DateUtils.LENGTH_SHORT);
+            return DateUtils.formatDateTime(getContext(), sourceTime, DateUtils.FORMAT_ABBREV_ALL);
         }
     }
 
