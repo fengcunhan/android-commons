@@ -20,6 +20,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import co.bitcode.android.app.ContextUtils;
+
 /**
  * Provides methods to test for network availability.
  * 
@@ -39,10 +41,14 @@ public final class NetworkHelper {
      * @since 1.0.0
      */
     public static boolean isConnected(final Context context) {
-        final ConnectivityManager manager = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        final ConnectivityManager manager = ContextUtils.getService(context,
+                Context.CONNECTIVITY_SERVICE);
         final NetworkInfo networkInfo = manager.getActiveNetworkInfo();
 
-        return networkInfo.isConnected();
+        if (networkInfo != null) {
+            return networkInfo.isConnected();
+        } else {
+            return false;
+        }
     }
 }
