@@ -47,16 +47,28 @@ public class ListActivity extends android.app.ListActivity {
     }
 
     /**
-     * Control whether the list is being displayed. You can make it not displayed if you are waiting
-     * for the initial data to show in it. During this time an indeterminante progress indicator
-     * will be shown instead.
+     * Controls whether to show the list or the progress indicator view.
      * 
      * @param shown
-     *        If true, the list view is shown; if false, the progress indicator. The initial value
-     *        is true.
+     *        If <code>true</code>, the list view is shown; if <code>false</code>, the progress
+     *        indicator.
      * @since 1.0.0
      */
     public void setListShown(final boolean shown) {
+        setListShown(shown, true);
+    }
+
+    /**
+     * Controls whether to show the list or the progress indicator view.
+     * 
+     * @param shown
+     *        If <code>true</code>, the list view is shown; if <code>false</code>, the progress
+     *        indicator.
+     * @param animate
+     *        If <code>true</code>, the state change is animated.
+     * @since 1.0.0
+     */
+    public void setListShown(final boolean shown, final boolean animate) {
         ensureContainers();
 
         if ((this.listContainer == null) || (this.progressContainer == null)) {
@@ -64,13 +76,19 @@ public class ListActivity extends android.app.ListActivity {
         }
 
         if (shown) {
-            this.progressContainer.startAnimation(this.fadeOutAnimation);
-            this.listContainer.startAnimation(this.fadeInAnimation);
+            if (animate) {
+                this.progressContainer.startAnimation(this.fadeOutAnimation);
+                this.listContainer.startAnimation(this.fadeInAnimation);
+            }
+
             this.progressContainer.setVisibility(View.GONE);
             this.listContainer.setVisibility(View.VISIBLE);
         } else {
-            this.progressContainer.startAnimation(this.fadeInAnimation);
-            this.listContainer.startAnimation(this.fadeOutAnimation);
+            if (animate) {
+                this.progressContainer.startAnimation(this.fadeInAnimation);
+                this.listContainer.startAnimation(this.fadeOutAnimation);
+            }
+
             this.progressContainer.setVisibility(View.VISIBLE);
             this.listContainer.setVisibility(View.GONE);
         }
