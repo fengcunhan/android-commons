@@ -57,16 +57,16 @@ public class CollapseAnimation extends Animation {
      * @since 1.0.0
      */
     public void collapseTo(final int startHeight, final int endHeight) {
-        if (startHeight < endHeight) {
-            throw new IllegalArgumentException("Starting height must be >= the ending height");
-        }
-
-        this.startHeight = startHeight;
-
         if (endHeight < 1) {
             this.endHeight = 1;
         } else {
             this.endHeight = endHeight;
+        }
+
+        if (startHeight < this.endHeight) {
+            this.startHeight = this.endHeight + 1;
+        } else {
+            this.startHeight = startHeight;
         }
     }
 
