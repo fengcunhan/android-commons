@@ -27,8 +27,8 @@
         <item quantity="other">%d\' ago</item>
     </plurals>
     <plurals name="view_fuzzydate_hours">
-        <item quantity="one">1 hour ago</item>
-        <item quantity="other">%d hours ago</item>
+        <item quantity="one">1h ago</item>
+        <item quantity="other">%dh ago</item>
     </plurals>
     <plurals name="view_fuzzydate_day">
         <item quantity="one">1 day ago</item>
