@@ -33,7 +33,7 @@ import android.widget.TextView;
  * @author Lorenzo Villani
  */
 public class EnumAdapter<E extends Enum<E>> extends CustomViewArrayAdapter<E> {
-    private final String[] mFriendlyStrings;
+    private final CharSequence[] mFriendlyStrings;
 
     /**
      * @see http://www.youtube.com/watch?v=wDBM6wVEO70
@@ -64,7 +64,8 @@ public class EnumAdapter<E extends Enum<E>> extends CustomViewArrayAdapter<E> {
      *        An array which contains friendly strings.
      * @since 1.0.0
      */
-    public EnumAdapter(final Context context, final List<E> list, final String[] friendlyStrings) {
+    public EnumAdapter(final Context context, final List<E> list,
+            final CharSequence[] friendlyStrings) {
         super(context, list);
 
         assert (friendlyStrings.length == list.size());
