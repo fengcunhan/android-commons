@@ -35,25 +35,17 @@ import co.bitcode.android.R;
  */
 public abstract class PreviewPreference extends DialogPreference {
     /**
-     * @param context
-     *        The {@link Context}.
-     * @param attrs
-     *        The {@link AttributeSet}.
      * @see android.view.View#View(Context, AttributeSet)
      */
+    // CHECKSTYLE IGNORE ALL CHECKS NEXT LINE
     public PreviewPreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }
 
     /**
-     * @param context
-     *        The {@link Context}.
-     * @param attrs
-     *        The {@link AttributeSet}.
-     * @param defStyle
-     *        The default style.
      * @see android.view.View#View(Context, AttributeSet, int)
      */
+    // CHECKSTYLE IGNORE ALL CHECKS NEXT LINE
     public PreviewPreference(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
     }
