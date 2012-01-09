@@ -53,6 +53,7 @@ public class PullToRefreshListView extends ListView implements OnClickListener {
     private int measuredHeight;
     private int lastDragStartY;
     private OnRefreshListener onRefreshListener;
+    private String emptyMessage;
 
     /* CHECKSTYLE IGNORE ALL CHECKS FOR NEXT 2 LINES */
     public interface OnRefreshListener {
@@ -208,6 +209,18 @@ public class PullToRefreshListView extends ListView implements OnClickListener {
         }
     }
 
+    public String getEmptyMessage() {
+        return this.emptyMessage;
+    }
+
+    public void setEmptyMessage(final String emptyMessage) {
+        this.emptyMessage = emptyMessage;
+    }
+
+    public void setEmptyMessage(final int resId) {
+        this.emptyMessage = getResources().getString(resId);
+    }
+
     private void init() {
         this.header = getLayoutInflater().inflate(R.layout.row_header_pulltorefresh, null);
         this.header.setOnClickListener(this);
@@ -231,8 +244,15 @@ public class PullToRefreshListView extends ListView implements OnClickListener {
 
     private void setEmptyHeader() {
         this.arrow.setVisibility(View.INVISIBLE);
-        this.message.setText(R.string.row_header_pulltorefresh_empty);
         this.progressBar.setVisibility(View.INVISIBLE);
+
+        if (this.emptyMessage != null) {
+            this.message.setText(this.emptyMessage);
+        } else {
+            this.message.setText(R.string.row_header_pulltorefresh_empty);
+        }
+
+        resetHeaderHeight();
     }
 
     private boolean isEmpty() {
