@@ -72,11 +72,14 @@ public abstract class CategoryIndexer<E extends Enum<E>, L> implements SectionIn
      * @param entry
      *        Entry which is being inspected.
      * @return Category for current entry.
+     * @since 1.0.0
      */
     public abstract E categorize(L entry);
 
     /**
      * Tells us to compute indexes for sections associated with this indexer.
+     * 
+     * @since 1.0.0
      */
     public void computeIndexes() {
         final int size = this.entries.size();
@@ -110,32 +113,19 @@ public abstract class CategoryIndexer<E extends Enum<E>, L> implements SectionIn
     }
 
     /**
-     * Retrieves offset for values belonging to a certain category. Useful in case you want to show
-     * an header before each section inside an adapter.
-     * 
-     * @param category
-     *        Category to consider.
-     * @return The offset.
+     * @param position
+     *        The position for which to return the section.
+     * @return <code>true</code> if position is the first in its section.
+     * @since 1.0.0
      */
-    public int getOffset(final E category) {
-        if (getOptional(this.sectionFound, category, false)) {
-            final E[] categories = getSections();
-            int offset = 0;
-
-            for (final E single : categories) {
-                if (!single.equals(category)) {
-                    if (getOptional(this.sectionFound, single, false)) {
-                        offset++;
-                    }
-                } else {
-                    break;
-                }
+    public boolean isHeaderPosition(final int position) {
+        for (final E category : this.sectionToPosition.keySet()) {
+            if (position == getOptional(this.sectionToPosition, category, -1)) {
+                return true;
             }
-
-            return offset;
-        } else {
-            return 0;
         }
+
+        return false;
     }
 
     /**
@@ -145,6 +135,7 @@ public abstract class CategoryIndexer<E extends Enum<E>, L> implements SectionIn
      *        The category to jump to.
      * @return The starting position of that section. If the section is out of bounds, the position
      *         must be clipped to fall within the size of the list.
+     * @since 1.0.0
      */
     public int getPositionForSection(final E category) {
         return getOptional(this.sectionToPosition, category, 0);
