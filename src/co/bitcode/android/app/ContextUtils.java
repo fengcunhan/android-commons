@@ -21,7 +21,7 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 
 /**
- * Provides utility methods to accomplish the most common tasks.
+ * Provides convenience methods to accomplish the most common tasks.
  * 
  * @since 1.0.0
  * @author Lorenzo Villani
