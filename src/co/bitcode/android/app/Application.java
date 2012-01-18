@@ -16,6 +16,7 @@
 
 package co.bitcode.android.app;
 
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +29,7 @@ import co.bitcode.android.util.LoggerFactory;
  * @author Lorenzo Villani
  */
 public class Application extends android.app.Application {
+    private static final MessageFormat MESSAGE_FORMAT = new MessageFormat("");
     private static Application instance;
     private static Logger logger;
 
@@ -68,7 +70,11 @@ public class Application extends android.app.Application {
      * @see Logger#log(Level, String, Object[])
      */
     public static void log(final Level logLevel, final String message, final Object... params) {
-        logger.log(logLevel, message, params);
+        synchronized (MESSAGE_FORMAT) {
+            MESSAGE_FORMAT.applyPattern(message);
+
+            logger.log(logLevel, MESSAGE_FORMAT.format(params), params);
+        }
     }
 
     /**
