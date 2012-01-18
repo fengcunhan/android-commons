@@ -18,6 +18,7 @@ package co.bitcode.android.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.view.LayoutInflater;
 
 /**
@@ -56,6 +57,18 @@ public final class ContextUtils {
      */
     public static LayoutInflater getLayoutInflater(final Context context) {
         return getService(context, Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    /**
+     * Return the handle to the location manager service.
+     * 
+     * @param context
+     *        The {@link Context}.
+     * @return The {@link LocationManager}.
+     * @since 1.0.0
+     */
+    public static LocationManager getLocationManager(final Context context) {
+        return getService(context, Context.LOCATION_SERVICE);
     }
 
     /**
