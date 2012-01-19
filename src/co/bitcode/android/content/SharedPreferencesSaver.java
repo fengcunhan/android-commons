@@ -16,6 +16,7 @@
 
 package co.bitcode.android.content;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
@@ -35,7 +36,7 @@ import co.bitcode.android.app.ContextUtils;
  * @author Lorenzo Villani
  */
 public abstract class SharedPreferencesSaver {
-    private final Map<String, Object> fieldValueMap;
+    private final Map<String, Object> fieldValueMap = new HashMap<String, Object>();
     private final SharedPreferences preferences;
 
     /**
@@ -46,10 +47,9 @@ public abstract class SharedPreferencesSaver {
      * @since 1.0.0
      */
     public SharedPreferencesSaver(final Context context) {
-        this.fieldValueMap = getMappings();
         this.preferences = ContextUtils.getPrivatePreferences(context, getPreferenceName());
 
-        validateMappings();
+        reload();
     }
 
     /**
@@ -70,25 +70,50 @@ public abstract class SharedPreferencesSaver {
         final Editor editor = this.preferences.edit();
 
         for (final String key : this.fieldValueMap.keySet()) {
-            put(editor, key, this.fieldValueMap.get(key));
+            final Object value = this.fieldValueMap.get(key);
+
+            if (value != null) {
+                store(editor, key, value);
+            }
         }
 
         editor.commit();
     }
 
-    public Map<String, Object> getFieldValueMap() {
-        return this.fieldValueMap;
+    /**
+     * A.
+     * 
+     * @param <V>
+     *        Type of returned value.
+     * @param key
+     *        What to look for.
+     * @return The value, or <code>null</code> if it could not be found.
+     */
+    @SuppressWarnings("unchecked")
+    public <V> V get(final String key) {
+        return (V) this.fieldValueMap.get(key);
     }
 
     /**
-     * Callback method invoked when the mapping between this shared preference's keys and its values
-     * is being initialized. The contents of the map are checked for <code>null</code> values after
-     * this callback method has been invoked.
-     * 
-     * @return Mapping between preference keys and their default values.
-     * @since 1.0.0
+     * @param key
+     *        What to look for.
+     * @return <code>true</code> if we have it, <code>false</code> otherwise.
      */
-    protected abstract Map<String, Object> getMappings();
+    public boolean has(final String key) {
+        return this.fieldValueMap.containsKey(key);
+    }
+
+    /**
+     * Puts a value.
+     * 
+     * @param key
+     *        The key.
+     * @param value
+     *        The value.
+     */
+    public void put(final String key, final Object value) {
+        this.fieldValueMap.put(key, value);
+    }
 
     /**
      * @return Desired name of the (private) shared preference.
@@ -96,7 +121,7 @@ public abstract class SharedPreferencesSaver {
      */
     protected abstract String getPreferenceName();
 
-    private void put(final Editor editor, final String key, final Object value) {
+    private void store(final Editor editor, final String key, final Object value) {
         if (value instanceof Boolean) {
             editor.putBoolean(key, (Boolean) value);
         } else if (value instanceof Float) {
@@ -109,14 +134,6 @@ public abstract class SharedPreferencesSaver {
             editor.putString(key, (String) value);
         } else {
             throw new RuntimeException("Trying to store an unsupported data type");
-        }
-    }
-
-    private void validateMappings() {
-        for (final String key : this.fieldValueMap.keySet()) {
-            if (this.fieldValueMap.get(key) == null) {
-                throw new NullPointerException(key.concat(" maps to a nul value"));
-            }
         }
     }
 }
