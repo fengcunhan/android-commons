@@ -40,7 +40,6 @@ public class EnumPreviewPreference<E extends Enum<E>> extends PreviewPreference 
     private static final int PADDING = 5;
 
     private CharSequence[] entries;
-    private Class<E> valuesType;
     private E[] values;
     private Spinner spinner;
     private String defaultValue;
