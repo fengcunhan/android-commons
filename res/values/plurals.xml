@@ -19,19 +19,19 @@
 
 <resources>
     <plurals name="view_fuzzydate_second">
-        <item quantity="one">1\'\' ago</item>
-        <item quantity="other">%d\'\' ago</item>
+        <item quantity="one">1\'\'</item>
+        <item quantity="other">%d\'\'</item>
     </plurals>
     <plurals name="view_fuzzydate_minute">
-        <item quantity="one">1\' ago</item>
-        <item quantity="other">%d\' ago</item>
+        <item quantity="one">1\'</item>
+        <item quantity="other">%d\'</item>
     </plurals>
     <plurals name="view_fuzzydate_hours">
-        <item quantity="one">1h ago</item>
-        <item quantity="other">%dh ago</item>
+        <item quantity="one">1h</item>
+        <item quantity="other">%dh</item>
     </plurals>
     <plurals name="view_fuzzydate_day">
-        <item quantity="one">1 day ago</item>
-        <item quantity="other">%d days ago</item>
+        <item quantity="one">1 day</item>
+        <item quantity="other">%d days</item>
     </plurals>
 </resources>
