@@ -20,6 +20,8 @@ import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import android.content.pm.PackageManager.NameNotFoundException;
+
 import co.bitcode.android.util.LoggerFactory;
 
 /**
@@ -39,6 +41,32 @@ public class Application extends android.app.Application {
 
         instance = this;
         logger = LoggerFactory.fromContext(this);
+    }
+
+    /**
+     * @return The <code>versionCode</code> as declared in <code>AndroidManifest.xml</code> for this
+     *         application.
+     * @since 1.0.0
+     */
+    public int getVersionCode() {
+        try {
+            return getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+        } catch (final NameNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * @return The <code>versionName</code> as declared in <code>AndroidManifest.xml</code> for this
+     *         application.
+     * @since 1.0.0
+     */
+    public String getVersionName() {
+        try {
+            return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        } catch (final NameNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static Application getInstance() {
