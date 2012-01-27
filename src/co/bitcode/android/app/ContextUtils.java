@@ -16,9 +16,11 @@
 
 package co.bitcode.android.app;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.view.LayoutInflater;
 
 /**
@@ -48,6 +50,18 @@ public final class ContextUtils {
     }
 
     /**
+     * Return the handle to the connectivity manager service.
+     * 
+     * @param context
+     *        The {@link Context}.
+     * @return The {@link ConnectivityManager}.
+     * @since 1.0.0
+     */
+    public static ConnectivityManager getConnectivityManager(final Context context) {
+        return getService(context, Context.CONNECTIVITY_SERVICE);
+    }
+
+    /**
      * Return the handle to the layout inflater service.
      * 
      * @param context
@@ -69,6 +83,18 @@ public final class ContextUtils {
      */
     public static LocationManager getLocationManager(final Context context) {
         return getService(context, Context.LOCATION_SERVICE);
+    }
+
+    /**
+     * Return the handle to the notification manager service.
+     * 
+     * @param context
+     *        The {@link Context}.
+     * @return The {@link NotificationManager}.
+     * @since 1.0.0
+     */
+    public static NotificationManager getNotificationManager(final Context context) {
+        return getService(context, Context.NOTIFICATION_SERVICE);
     }
 
     /**
