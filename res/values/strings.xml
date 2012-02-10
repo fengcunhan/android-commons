@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-
     Android Utilities
     Copyright (C) 2010, 2011, 2012  Lorenzo Villani
 
@@ -14,31 +13,21 @@
 
     You should have received a copy of the GNU Lesser General Public License along
     with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 -->
-
 <resources>
     <string name="dialog_error_title">Error</string>
-    <string name="dialog_invitationcode">
-        This application is currently in closed beta testing phase. To continue, provide the
-        invitation code we sent you:
-    </string>
+    <string name="dialog_invitationcode">This application is currently in closed beta testing phase. To continue, provide the invitation code we sent you:</string>
     <string name="dialog_invitationcode_error">Invalid code.</string>
-    
     <string name="eula_accept">Accept</string>
     <string name="eula_refuse">Refuse</string>
     <string name="eula_title">License Agreement</string>
-    
+    <string name="generic_loading">Loading…</string>
     <string name="intent_sendEmail">Send Email</string>
-    
-    <string name="view_fuzzydate_moments">Moments ago</string>
-    <string name="view_fuzzydate_other">%s</string>
-    
-    <string name="generic_loading">Loading</string>
     <string name="previewpreference_notSet">Not set.</string>
-    
     <string name="row_header_pulltorefresh_empty">Tap to refresh</string>
     <string name="row_header_pulltorefresh_loading">Loading...</string>
     <string name="row_header_pulltorefresh_pullDown">Pull down to refresh...</string>
     <string name="row_header_pulltorefresh_release">Release to refresh...</string>
+    <string name="view_fuzzydate_moments">Moments ago</string>
+    <string name="view_fuzzydate_other">%s</string>
 </resources>
