@@ -16,12 +16,8 @@
 
 package co.bitcode.android.content;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 
 import co.bitcode.android.app.ContextUtils;
 
@@ -35,8 +31,7 @@ import co.bitcode.android.app.ContextUtils;
  * @since 1.0.0
  * @author Lorenzo Villani
  */
-public abstract class SharedPreferencesSaver {
-    private final Map<String, Object> fieldValueMap = new HashMap<String, Object>();
+public abstract class SharedPreferencesWrapper {
     private final SharedPreferences preferences;
 
     /**
@@ -46,52 +41,59 @@ public abstract class SharedPreferencesSaver {
      *        The {@link Context}.
      * @since 1.0.0
      */
-    public SharedPreferencesSaver(final Context context) {
+    public SharedPreferencesWrapper(final Context context) {
         this.preferences = ContextUtils.getPrivatePreferences(context, getPreferenceName());
-
-        reload();
     }
 
     /**
-     * Reloads the shared preferences in the backing map.
+     * Clears any stored preferences.
      * 
      * @since 1.0.0
      */
-    public void reload() {
-        this.fieldValueMap.putAll(this.preferences.getAll());
+    public void clear() {
+        this.preferences.edit().clear().commit();
+    }
+
+    public SharedPreferences getPreferences() {
+        return this.preferences;
     }
 
     /**
-     * Saves values into the {@link SharedPreferences} backing this object.
+     * Retrieves a value from the underlying {@link SharedPreferences}.
      * 
-     * @since 1.0.0
-     */
-    public void save() {
-        final Editor editor = this.preferences.edit();
-
-        for (final String key : this.fieldValueMap.keySet()) {
-            final Object value = this.fieldValueMap.get(key);
-
-            if (value != null) {
-                store(editor, key, value);
-            }
-        }
-
-        editor.commit();
-    }
-
-    /**
-     * A.
-     * 
-     * @param <V>
-     *        Type of returned value.
+     * @param <T>
+     *        Return type.
      * @param key
-     *        What to look for.
-     * @return The value, or <code>null</code> if it could not be found.
+     *        Lookup key.
+     * @return The stored value, or <code>null</code> if it could not be found.
+     * @since 1.0.0
      */
     @SuppressWarnings("unchecked")
-    public <V> V get(final String key) {
-        return (V) this.fieldValueMap.get(key);
+    protected <T> T get(final String key) {
+        return (T) this.preferences.getAll().get(key);
+    }
+
+    /**
+     * Retrieves a value from the underlying {@link SharedPreferences} or, if it doesn't exist,
+     * returns a default value.
+     * 
+     * @param <T>
+     *        Return type.
+     * @param key
+     *        Lookup key.
+     * @param defaultValue
+     *        The default value to return in case no value is associated with the key.
+     * @return The stored value of <code>defaultValue</code> if it could not be found.
+     * @since 1.0.0
+     */
+    protected <T> T get(final String key, final T defaultValue) {
+        final T value = get(key);
+
+        if (value == null) {
+            return defaultValue;
+        } else {
+            return value;
+        }
     }
 
     /**
@@ -99,8 +101,8 @@ public abstract class SharedPreferencesSaver {
      *        What to look for.
      * @return <code>true</code> if we have it, <code>false</code> otherwise.
      */
-    public boolean has(final String key) {
-        return this.fieldValueMap.containsKey(key);
+    protected boolean has(final String key) {
+        return this.preferences.contains(key);
     }
 
     /**
@@ -110,9 +112,11 @@ public abstract class SharedPreferencesSaver {
      *        The key.
      * @param value
      *        The value.
+     * @param <T>
+     *        Value type.
      */
-    public void put(final String key, final Object value) {
-        this.fieldValueMap.put(key, value);
+    protected <T> void put(final String key, final T value) {
+        store(key, value);
     }
 
     /**
@@ -121,17 +125,17 @@ public abstract class SharedPreferencesSaver {
      */
     protected abstract String getPreferenceName();
 
-    private void store(final Editor editor, final String key, final Object value) {
+    private void store(final String key, final Object value) {
         if (value instanceof Boolean) {
-            editor.putBoolean(key, (Boolean) value);
+            this.preferences.edit().putBoolean(key, (Boolean) value).commit();
         } else if (value instanceof Float) {
-            editor.putFloat(key, (Float) value);
+            this.preferences.edit().putFloat(key, (Float) value).commit();
         } else if (value instanceof Integer) {
-            editor.putInt(key, (Integer) value);
+            this.preferences.edit().putInt(key, (Integer) value).commit();
         } else if (value instanceof Long) {
-            editor.putLong(key, (Long) value);
+            this.preferences.edit().putLong(key, (Long) value).commit();
         } else if (value instanceof String) {
-            editor.putString(key, (String) value);
+            this.preferences.edit().putString(key, (String) value).commit();
         } else {
             throw new RuntimeException("Trying to store an unsupported data type");
         }

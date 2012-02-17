@@ -18,7 +18,7 @@ package co.bitcode.com.google.android.c2dm;
 
 import android.content.Context;
 
-import co.bitcode.android.content.SharedPreferencesSaver;
+import co.bitcode.android.content.SharedPreferencesWrapper;
 
 /**
  * Stores Google's Cloud to Device Messaging Framework status for current application.
@@ -26,9 +26,8 @@ import co.bitcode.android.content.SharedPreferencesSaver;
  * @since 1.0.0
  * @author Lorenzo Villani
  */
-public class C2DMStatus extends SharedPreferencesSaver {
+public class C2DMStatus extends SharedPreferencesWrapper {
     private static final String KEY_IS_REGISTERED = "isRegistered";
-    private static final String PREFERENCES = "c2dm";
 
     /**
      * Constructor.
@@ -41,7 +40,7 @@ public class C2DMStatus extends SharedPreferencesSaver {
     }
 
     public boolean isRegistered() {
-        return (Boolean) (has(KEY_IS_REGISTERED) ? get(KEY_IS_REGISTERED) : false);
+        return get(KEY_IS_REGISTERED, false);
     }
 
     // CHECKSTYLE IGNORE ALL CHECKS NEXT LINE
@@ -51,6 +50,6 @@ public class C2DMStatus extends SharedPreferencesSaver {
 
     @Override
     protected String getPreferenceName() {
-        return PREFERENCES;
+        return "c2dm";
     }
 }

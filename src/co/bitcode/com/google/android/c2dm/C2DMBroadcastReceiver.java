@@ -64,10 +64,7 @@ public abstract class C2DMBroadcastReceiver extends BroadcastReceiver {
         if (!intent.hasExtra(C2DMContract.EXTRA_ERROR)) {
             if (intent.hasExtra(C2DMContract.EXTRA_UNREGISTERED)) {
                 // Clear registration status
-                final C2DMStatus status = new C2DMStatus(context);
-
-                status.setRegistered(false);
-                status.save();
+                new C2DMStatus(context).setRegistered(false);
             } else if (intent.hasExtra(C2DMContract.EXTRA_REGISTRATION_ID)) {
                 // Store registration status
                 final C2DMStatus status = new C2DMStatus(context);
@@ -75,7 +72,6 @@ public abstract class C2DMBroadcastReceiver extends BroadcastReceiver {
                 onRegister(intent.getStringExtra(C2DMContract.EXTRA_REGISTRATION_ID));
 
                 status.setRegistered(true);
-                status.save();
             }
         }
     }
