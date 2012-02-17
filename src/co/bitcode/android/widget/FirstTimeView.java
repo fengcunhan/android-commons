@@ -17,8 +17,6 @@
 package co.bitcode.android.widget;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +26,7 @@ import android.widget.TextView;
 
 import co.bitcode.android.R;
 import co.bitcode.android.app.ContextUtils;
+import co.bitcode.android.widget.util.FirstTimeState;
 
 /**
  * A view that is shown the first time the application is started.
@@ -40,10 +39,8 @@ import co.bitcode.android.app.ContextUtils;
 public class FirstTimeView extends RelativeLayout implements OnClickListener {
     private static final int BACKGROUND_COLOR = 0xFFEEEEEC;
     private static final String DEFAULT = "default";
-    private static final String PREFERENCES = "firsttimehelp";
-    private static final String PREFERENCE_SUPPRESSALL = "suppressAll";
 
-    private SharedPreferences preferences;
+    private FirstTimeState preferences;
     private TextView textView;
 
     /**
@@ -113,12 +110,7 @@ public class FirstTimeView extends RelativeLayout implements OnClickListener {
      *        The {@link Context}.
      */
     public static void suppressAll(final Context context) {
-        final SharedPreferences preferences = ContextUtils.getPrivatePreferences(context,
-                PREFERENCES);
-        final Editor editor = preferences.edit();
-
-        editor.putBoolean(PREFERENCE_SUPPRESSALL, true);
-        editor.commit();
+        new FirstTimeState(context).setSuppressingAll(true);
     }
 
     /**
@@ -154,7 +146,7 @@ public class FirstTimeView extends RelativeLayout implements OnClickListener {
 
         inflater.inflate(R.layout.view_firsttimeview, this);
 
-        this.preferences = ContextUtils.getPrivatePreferences(getContext(), PREFERENCES);
+        this.preferences = new FirstTimeState(getContext());
         this.textView = ViewUtils.find(this, R.id.view_firsttimeview_message);
 
         if (isSuppressed()) {
@@ -181,7 +173,7 @@ public class FirstTimeView extends RelativeLayout implements OnClickListener {
     }
 
     private boolean hasShownMessageOnce(final String messageTag) {
-        return this.preferences.getBoolean(messageTag, false);
+        return this.preferences.getState(messageTag);
     }
 
     private void storeMessageShown(final String messageTag) {
@@ -189,13 +181,10 @@ public class FirstTimeView extends RelativeLayout implements OnClickListener {
     }
 
     private void putBoolean(final String key, final boolean value) {
-        final Editor editor = this.preferences.edit();
-
-        editor.putBoolean(key, value);
-        editor.commit();
+        this.preferences.setState(key, value);
     }
 
     private boolean isSuppressed() {
-        return this.preferences.getBoolean(PREFERENCE_SUPPRESSALL, false);
+        return this.preferences.isSuppressingAll();
     }
 }
