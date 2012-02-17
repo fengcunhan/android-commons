@@ -1,0 +1,61 @@
+#!/usr/bin/ruby -w
+#
+# android-normalize-id - Normalize IDs in layout files.
+# (C) Copyright 2011 Lorenzo Villani.
+#
+# This program is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation, version 3 of the License.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+# more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Usage:
+# run this script while in the root directory of an Android project.
+#
+# Motivation:
+# ADT layout designer has a bad habit to use "@+id" instead of "@id" references
+# in meaningless places. Make sure we use "@+id" references only when declaring
+# a new ID (i.e.: in "android:id" tag attribute).
+
+require "find"
+require "fileutils"
+
+# ------------------------------------------------------------------------------
+# Functions
+# ------------------------------------------------------------------------------
+
+def with_file(name)
+  contents = File.read(name)
+
+  yield contents
+
+  output = open(name, "w")
+  output.puts(contents)
+
+  if not contents.end_with? "\n\n" then
+    output.puts("\n")
+  end
+
+  output.close
+end
+
+# ------------------------------------------------------------------------------
+# Main
+# ------------------------------------------------------------------------------
+
+if __FILE__ == $PROGRAM_NAME then
+  Find.find("res/layout") do |path|
+    if FileTest.file? path and File.extname(path) == ".xml" then
+      with_file path do |contents|
+        contents.gsub!(/@\+id/, "@id")
+        contents.gsub!(/android:id="@id/, "android:id=\"@+id")
+      end
+    end
+  end
+end
