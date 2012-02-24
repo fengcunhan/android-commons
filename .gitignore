@@ -5,6 +5,7 @@
 .releasekey
 Thumbs.db
 desktop.ini
+local.properties
 
 .settings/
 bin/
