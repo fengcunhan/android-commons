@@ -43,6 +43,7 @@ public final class ViewUtils {
      * @param listener
      *        The click listener to bind to the view.
      * @return Found {@link View} (if any).
+     * @since 1.0.0
      */
     public static <T extends View> T bind(final Activity activity, final int resId,
             final OnClickListener listener) {
@@ -65,6 +66,7 @@ public final class ViewUtils {
      * @param listener
      *        The click listener to bind to the view.
      * @return Found {@link View} (if any).
+     * @since 1.0.0
      */
     public static <T extends View> T bind(final Dialog dialog, final int resId,
             final OnClickListener listener) {
@@ -87,6 +89,7 @@ public final class ViewUtils {
      * @param listener
      *        The click listener to bind to the view.
      * @return Found {@link View} (if any).
+     * @since 1.0.0
      */
     public static <T extends View> T bind(final View parent, final int resId,
             final OnClickListener listener) {
@@ -107,6 +110,7 @@ public final class ViewUtils {
      * @param resId
      *        {@link View} resource id.
      * @return Found {@link View} (if any).
+     * @since 1.0.0
      */
     public static <T> T find(final Activity activity, final int resId) {
         return coherceNotNull(activity.findViewById(resId));
@@ -137,9 +141,27 @@ public final class ViewUtils {
      * @param resId
      *        {@link View} resource id.
      * @return Found {@link View} (if any).
+     * @since 1.0.0
      */
     public static <T> T find(final View parent, final int resId) {
         return coherceNotNull(parent.findViewById(resId));
+    }
+
+    /**
+     * Wraps {@link View#setVisibility(int)}.
+     * 
+     * @param view
+     *        The view.
+     * @param isVisible
+     *        The visibility flag.
+     * @since 1.0.0
+     */
+    public static void setVisible(final View view, final boolean isVisible) {
+        if (isVisible) {
+            view.setVisibility(View.VISIBLE);
+        } else {
+            view.setVisibility(View.GONE);
+        }
     }
 
     @SuppressWarnings("unchecked")
