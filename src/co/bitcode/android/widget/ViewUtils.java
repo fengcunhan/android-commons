@@ -148,6 +148,16 @@ public final class ViewUtils {
     }
 
     /**
+     * @param view
+     *        The view.
+     * @return <code>true</code> if view is visible, <code>false</code> otherwise.
+     * @since 1.0.0
+     */
+    public static boolean isVisible(final View view) {
+        return view.getVisibility() == View.VISIBLE;
+    }
+
+    /**
      * Wraps {@link View#setVisibility(int)}.
      * 
      * @param view
