@@ -16,6 +16,10 @@
 
 package co.bitcode.android.widget;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -52,12 +56,21 @@ public class PullToRefreshListView extends ListView implements OnClickListener {
     private boolean isRefreshing;
     private int measuredHeight;
     private int lastDragStartY;
-    private OnRefreshListener onRefreshListener;
     private String emptyMessage;
+
+    private final Set<OnRefreshListener> refreshListeners = Collections
+            .synchronizedSet(new HashSet<OnRefreshListener>(1));
+    private final Set<OnRefreshDoneListener> refreshDoneListeners = Collections
+            .synchronizedSet(new HashSet<OnRefreshDoneListener>(1));
 
     /* CHECKSTYLE IGNORE ALL CHECKS FOR NEXT 2 LINES */
     public interface OnRefreshListener {
         void onRefresh();
+    }
+
+    /* CHECKSTYLE IGNORE ALL CHECKS FOR NEXT 2 LINES */
+    public interface OnRefreshDoneListener {
+        void onRefreshDone();
     }
 
     /**
@@ -137,6 +150,10 @@ public class PullToRefreshListView extends ListView implements OnClickListener {
             hideProgressBar();
             deactivateRefresh();
         }
+
+        for (final OnRefreshDoneListener listener : this.refreshDoneListeners) {
+            listener.onRefreshDone();
+        }
     }
 
     /**
@@ -147,17 +164,44 @@ public class PullToRefreshListView extends ListView implements OnClickListener {
     public void refresh() {
         notifyRefreshStarting();
 
-        if (this.onRefreshListener != null) {
-            this.onRefreshListener.onRefresh();
+        for (final OnRefreshListener listener : this.refreshListeners) {
+            listener.onRefresh();
         }
     }
 
-    public OnRefreshListener getOnRefreshListener() {
-        return this.onRefreshListener;
+    /**
+     * Adds a listener to the list of objects to be notified in case {@link #refresh()} is invoked.
+     * 
+     * @param listener
+     *        A listener.
+     * @since 1.0.0
+     */
+    public void addOnRefreshListener(final OnRefreshListener listener) {
+        this.refreshListeners.add(listener);
     }
 
+    /**
+     * Adds a listener to the list of objects to be notified in case {@link #notifyRefreshDone()} is
+     * invoked.
+     * 
+     * @param listener
+     *        A listener.
+     * @since 1.0.0
+     */
+    public void addOnRefreshDoneListener(final OnRefreshDoneListener listener) {
+        this.refreshDoneListeners.add(listener);
+    }
+
+    /**
+     * @deprecated This method is superseeded by {@link #addOnRefreshListener(OnRefreshListener)}.
+     * @param onRefreshListener
+     *        A listener.
+     * @see #addOnRefreshListener(OnRefreshListener)
+     * @since 1.0.0
+     */
+    @Deprecated
     public void setOnRefreshListener(final OnRefreshListener onRefreshListener) {
-        this.onRefreshListener = onRefreshListener;
+        addOnRefreshListener(onRefreshListener);
     }
 
     @Override
