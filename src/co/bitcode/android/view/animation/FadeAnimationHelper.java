@@ -33,7 +33,7 @@ import co.bitcode.android.widget.ViewUtils;
  * @author Lorenzo Villani
  */
 public final class FadeAnimationHelper {
-    private static final long DEFAULT_DURATION = 250;
+    private static final long DEFAULT_DURATION = 200;
 
     private static class FadeAnimationListener implements AnimationListener {
         private final AnimationType animationType;
