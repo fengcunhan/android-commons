@@ -16,10 +16,15 @@
 
 package co.bitcode.android.view.animation;
 
+import java.security.InvalidParameterException;
+
 import android.content.Context;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+
+import co.bitcode.android.widget.ViewUtils;
 
 /**
  * Utility methods to easily apply a fade-in/out animation to a view.
@@ -28,7 +33,43 @@ import android.view.animation.AnimationUtils;
  * @author Lorenzo Villani
  */
 public final class FadeAnimationHelper {
-    private static final long DEFAULT_DURATION = 500;
+    private static final long DEFAULT_DURATION = 250;
+
+    private static class FadeAnimationListener implements AnimationListener {
+        private final AnimationType animationType;
+        private final View animatedView;
+
+        public enum AnimationType {
+            FADE_IN,
+            FADE_OUT,
+        }
+
+        public FadeAnimationListener(final AnimationType animationType, final View animatedView) {
+            this.animationType = animationType;
+            this.animatedView = animatedView;
+        }
+
+        @Override
+        public void onAnimationEnd(final Animation animation) {
+            this.animatedView.clearAnimation();
+
+            if (this.animationType == AnimationType.FADE_IN) {
+                ViewUtils.setVisible(this.animatedView, true);
+            } else if (this.animationType == AnimationType.FADE_OUT) {
+                ViewUtils.setVisible(this.animatedView, false);
+            }
+        }
+
+        @Override
+        public void onAnimationRepeat(final Animation animation) {
+            // Ignored
+        }
+
+        @Override
+        public void onAnimationStart(final Animation animation) {
+            // Ignored
+        }
+    }
 
     private FadeAnimationHelper() {
     }
@@ -94,7 +135,18 @@ public final class FadeAnimationHelper {
         final Animation animation = AnimationUtils.loadAnimation(context, resId);
 
         animation.setDuration(duration);
+        animation.setAnimationListener(getAnimationListener(resId, view));
 
         view.startAnimation(animation);
+    }
+
+    private static FadeAnimationListener getAnimationListener(final int resId, final View view) {
+        if (resId == android.R.anim.fade_in) {
+            return new FadeAnimationListener(FadeAnimationListener.AnimationType.FADE_IN, view);
+        } else if (resId == android.R.anim.fade_out) {
+            return new FadeAnimationListener(FadeAnimationListener.AnimationType.FADE_OUT, view);
+        } else {
+            throw new InvalidParameterException("Unsupported animation type");
+        }
     }
 }
