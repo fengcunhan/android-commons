@@ -64,5 +64,5 @@ public abstract class AbstractTitlePagerAdapter extends AbstractPagerAdapter imp
      *         will raise a {@link RuntimeException}. In addition, this list must have the same
      *         number of elements as reported by {@link #getCount()}.
      */
-    public abstract List<String> getTitles();
+    protected abstract List<String> getTitles();
 }
