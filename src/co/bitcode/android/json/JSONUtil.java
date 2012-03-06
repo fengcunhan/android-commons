@@ -54,6 +54,8 @@ public final class JSONUtil {
             return objects;
         } catch (final JSONException e) {
             throw new RuntimeException(e);
+        } catch (final NullPointerException e) {
+            return new ArrayList<JSONObject>(0);
         }
     }
 }
