@@ -116,7 +116,7 @@ public abstract class FileCache<K, V> extends LruCache<K, V> {
 
     private File getCacheFile(final K key) {
         // XXX: Use something different?
-        final String fileName = "C".concat(Integer.toString(Math.abs(key.toString().hashCode())));
+        final String fileName = Integer.toHexString(key.toString().hashCode());
 
         return FileUtils.getFile(this.cacheDir, fileName);
     }
