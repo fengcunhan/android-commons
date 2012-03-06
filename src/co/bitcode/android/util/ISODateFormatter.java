@@ -29,15 +29,8 @@ import java.util.TimeZone;
  * @author Lorenzo Villani
  */
 public final class ISODateFormatter {
-    /**
-     * Pattern used to convert from/to ISO Date format.
-     */
-    public static final DateFormat ISO_FORMAT = new SimpleDateFormat("yyyyMMdd");
-
-    /**
-     * Pattern used to convert from/to ISO Date And Time format.
-     */
-    public static final DateFormat ISO_FULL_FORMAT = new SimpleDateFormat("yyyyMMddhhmmss");
+    private static final DateFormat ISO_FORMAT = new SimpleDateFormat("yyyyMMdd");
+    private static final DateFormat ISO_FULL_FORMAT = new SimpleDateFormat("yyyyMMddhhmmss");
 
     static {
         ISO_FULL_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -54,7 +47,7 @@ public final class ISODateFormatter {
      * @return Full ISO Date + Time string.
      * @since 1.0.0
      */
-    public static String format(final Date date) {
+    public synchronized static String format(final Date date) {
         return ISO_FULL_FORMAT.format(date);
     }
 
@@ -66,7 +59,7 @@ public final class ISODateFormatter {
      * @return ISO Date string.
      * @since 1.0.0
      */
-    public static String formatDate(final Date date) {
+    public synchronized static String formatDate(final Date date) {
         return ISO_FORMAT.format(date);
     }
 
@@ -78,7 +71,7 @@ public final class ISODateFormatter {
      * @return {@link java.util.Date} object representation of input string.
      * @since 1.0.0
      */
-    public static Date parseISODate(final String date) {
+    public synchronized static Date parseISODate(final String date) {
         try {
             return ISO_FORMAT.parse(date);
         } catch (final ParseException e) {
@@ -94,7 +87,7 @@ public final class ISODateFormatter {
      * @return {@link java.util.Date} representation of input string.
      * @since 1.0.0
      */
-    public static Date parseISODateAndTime(final String dateAndTime) {
+    public synchronized static Date parseISODateAndTime(final String dateAndTime) {
         try {
             return ISO_FULL_FORMAT.parse(dateAndTime);
         } catch (final ParseException e) {
