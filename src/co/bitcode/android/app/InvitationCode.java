@@ -162,7 +162,6 @@ public final class InvitationCode extends AlertDialog implements OnClickListener
 
     private void onNegativeButtonClicked() {
         // This is probably the worst way to forcefully terminate the application.
-        System.runFinalizersOnExit(true);
         System.exit(0);
     }
 }
