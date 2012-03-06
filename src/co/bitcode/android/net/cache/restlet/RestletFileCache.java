@@ -70,10 +70,14 @@ public class RestletFileCache extends FileCache<Reference, Representation> {
 
     @Override
     protected void store(final File cacheFile, final Representation value) {
+        final OutputStream outputStream = getOutputStream(cacheFile);
+
         try {
-            IOUtils.copy(value.getStream(), getOutputStream(cacheFile));
+            IOUtils.copy(value.getStream(), outputStream);
         } catch (final IOException e) {
-            throw new RuntimeException(e);
+            IOUtils.closeQuietly(outputStream);
+        } finally {
+            IOUtils.closeQuietly(outputStream);
         }
     }
 
