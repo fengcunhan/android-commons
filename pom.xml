@@ -60,6 +60,7 @@
                     <strictCheck>true</strictCheck>
                     <excludes>
                         <exclude>src/co/bitcode/android/app/Eula.java</exclude>
+                        <exclude>src/co/bitcode/android/net/cache/LruCache.java</exclude>
                         <exclude>src/co/bitcode/android/widget/DashboardLayout.java</exclude>
                     </excludes>
                     <includes>
