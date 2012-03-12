@@ -81,7 +81,7 @@ public abstract class FileCache<K, V> extends LruCache<K, V> {
      * @since 1.0.0
      */
     @Override
-    public V put(final K key, final V value) {
+    public synchronized V put(final K key, final V value) {
         final V ret = super.put(key, value);
 
         store(getCacheFile(key), value);
@@ -122,7 +122,7 @@ public abstract class FileCache<K, V> extends LruCache<K, V> {
     }
 
     @Override
-    protected void entryRemoved(final boolean evicted, final K key, final V oldValue,
+    protected synchronized void entryRemoved(final boolean evicted, final K key, final V oldValue,
             final V newValue) {
         getCacheFile(key).delete();
     }

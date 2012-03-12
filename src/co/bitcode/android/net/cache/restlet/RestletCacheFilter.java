@@ -52,9 +52,10 @@ public class RestletCacheFilter extends Filter {
      *        The application context.
      * @since 1.0.0
      */
-    public RestletCacheFilter(final Context context) {
-        this.imageCache = new RestletFileCache(context, IMAGE_CACHE_SIZE, ZONE_IMAGE);
-        this.entityCache = new RestletFileCache(context, ENTITY_CACHE_SIZE, ZONE_ENTITY);
+    public RestletCacheFilter(final Context context, final long expImages, final long expEntities) {
+        this.imageCache = new RestletFileCache(context, IMAGE_CACHE_SIZE, expImages, ZONE_IMAGE);
+        this.entityCache = new RestletFileCache(context, ENTITY_CACHE_SIZE, expEntities,
+                ZONE_ENTITY);
 
         this.cachePool.add(this.imageCache);
         this.cachePool.add(this.entityCache);
