@@ -19,7 +19,6 @@ package co.bitcode.android.net.cache;
 import java.io.File;
 
 import android.content.Context;
-import android.support.v4.util.LruCache;
 
 import org.apache.commons.io.FileUtils;
 
@@ -78,14 +77,16 @@ public abstract class FileCache<K, V> extends LruCache<K, V> {
      *        The value.
      * @param writeThrough
      *        Whether to write the cached value on disk.
+     * @return
      * @since 1.0.0
      */
-    public final void put(final K key, final V value, final boolean writeThrough) {
-        put(key, value);
+    @Override
+    public V put(final K key, final V value) {
+        final V ret = super.put(key, value);
 
-        if (writeThrough) {
-            store(getCacheFile(key), value);
-        }
+        store(getCacheFile(key), value);
+
+        return ret;
     }
 
     /**
