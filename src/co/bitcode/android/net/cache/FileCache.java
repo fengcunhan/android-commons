@@ -116,9 +116,9 @@ public abstract class FileCache<K, V> extends LruCache<K, V> {
 
         if (cacheFile.exists()) {
             return load(cacheFile);
+        } else {
+            return null;
         }
-
-        return null;
     }
 
     @Override
