@@ -62,24 +62,30 @@ public abstract class FileCache<K, V> extends LruCache<K, V> {
     /**
      * @param key
      *        Value to check.
-     * @return <code>true</code> if it's in the cache, <code>false</code> otherwise.
+     * @return <code>true</code> if <code>key</code> is in the cache, <code>false</code> otherwise.
+     * @since 1.0.0
      */
     public boolean hasKey(final K key) {
         return getCacheFile(key).exists() || (get(key) != null);
     }
 
     /**
-     * A.
+     * Caches <code>value</code> for <code>key</code>. The value is moved to the head of the queue.
      * 
      * @param key
-     *        A.
+     *        The key.
      * @param value
-     *        B.
+     *        The value.
+     * @param writeThrough
+     *        Whether to write the cached value on disk.
      * @since 1.0.0
      */
-    public final void putWriteThrough(final K key, final V value) {
+    public final void put(final K key, final V value, final boolean writeThrough) {
         put(key, value);
-        store(getCacheFile(key), value);
+
+        if (writeThrough) {
+            store(getCacheFile(key), value);
+        }
     }
 
     /**
@@ -114,10 +120,13 @@ public abstract class FileCache<K, V> extends LruCache<K, V> {
         return null;
     }
 
-    private File getCacheFile(final K key) {
-        // XXX: Use something different?
-        final String fileName = Integer.toHexString(key.toString().hashCode());
+    @Override
+    protected void entryRemoved(final boolean evicted, final K key, final V oldValue,
+            final V newValue) {
+        getCacheFile(key).delete();
+    }
 
-        return FileUtils.getFile(this.cacheDir, fileName);
+    protected File getCacheFile(final K key) {
+        return FileUtils.getFile(this.cacheDir, Integer.toHexString(key.toString().hashCode()));
     }
 }

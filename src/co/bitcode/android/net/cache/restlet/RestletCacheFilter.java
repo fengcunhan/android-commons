@@ -102,7 +102,7 @@ public class RestletCacheFilter extends Filter {
             final Response response) {
         final Representation ret = new ByteArrayRepresentation(response.getEntity());
 
-        cache.putWriteThrough(reference, ret);
+        cache.put(reference, ret, true);
 
         response.setEntity(ret);
     }
