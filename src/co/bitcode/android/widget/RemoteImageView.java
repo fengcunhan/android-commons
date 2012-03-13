@@ -30,6 +30,26 @@ import co.bitcode.android.widget.util.RemoteImageTask;
  * @author Lorenzo Villani
  */
 public abstract class RemoteImageView extends RoundedCornerImageView {
+    private OnImageDownloaded onImageDownloaded;
+
+    /**
+     * Interface definition for a callback to be invoked when the RemoteImageView has finished
+     * getting a picture from the network.
+     * 
+     * @since 1.0.0
+     * @author Lorenzo Villani
+     */
+    public static interface OnImageDownloaded {
+        /**
+         * Called when the {@link RemoteImageView} has finished downloading the picture.
+         * 
+         * @param bitmap
+         *        The downloaded {@link Bitmap}.
+         * @since 1.0.0
+         */
+        void onImageDownloaded(final Bitmap bitmap);
+    }
+
     /**
      * Use this as a return value with {@link #getMissingDrawable()} and
      * {@link #getLoadingDrawable()} in case you don't want to change our current bitmap.
@@ -79,7 +99,20 @@ public abstract class RemoteImageView extends RoundedCornerImageView {
      */
     @Override
     public void setImageURI(final Uri uri) {
-        new RemoteImageTask(this).execute(uri);
+        new RemoteImageTask(this) {
+            @Override
+            protected void onFinish(final Bitmap result) {
+                super.onFinish(result);
+
+                if (RemoteImageView.this.onImageDownloaded != null) {
+                    RemoteImageView.this.onImageDownloaded.onImageDownloaded(result);
+                }
+            }
+        }.execute(uri);
+    }
+
+    public void setOnImageDownloaded(final OnImageDownloaded onImageDownloaded) {
+        this.onImageDownloaded = onImageDownloaded;
     }
 
     /**
