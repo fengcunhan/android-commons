@@ -30,6 +30,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.restlet.data.MediaType;
 import org.restlet.data.Reference;
+import org.restlet.representation.ByteArrayRepresentation;
 import org.restlet.representation.Representation;
 
 /**
