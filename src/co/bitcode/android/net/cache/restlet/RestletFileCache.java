@@ -28,8 +28,8 @@ import co.bitcode.android.net.cache.FileCache;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.restlet.data.MediaType;
 import org.restlet.data.Reference;
+import org.restlet.engine.io.BufferingRepresentation;
 import org.restlet.representation.ByteArrayRepresentation;
 import org.restlet.representation.Representation;
 
@@ -63,8 +63,8 @@ public class RestletFileCache extends ExpirationFileCache<Reference, Representat
     @Override
     protected Representation load(final File cacheFile) {
         try {
-            return new ByteArrayRepresentation(FileUtils.readFileToByteArray(cacheFile),
-                    MediaType.APPLICATION_OCTET_STREAM);
+            return new BufferingRepresentation(new ByteArrayRepresentation(
+                    FileUtils.readFileToByteArray(cacheFile)));
         } catch (final IOException e) {
             throw new RuntimeException(e);
         }
