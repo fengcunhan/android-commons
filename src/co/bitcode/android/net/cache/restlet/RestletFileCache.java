@@ -16,7 +16,6 @@
 
 package co.bitcode.android.net.cache.restlet;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,8 +39,6 @@ import org.restlet.representation.Representation;
  * @author Lorenzo Villani
  */
 public class RestletFileCache extends ExpirationFileCache<Reference, Representation> {
-    private static final int BUFFER_SIZE = 4096;
-
     /**
      * Constructor.
      * 
@@ -79,7 +76,7 @@ public class RestletFileCache extends ExpirationFileCache<Reference, Representat
         try {
             IOUtils.copy(value.getStream(), outputStream);
         } catch (final IOException e) {
-            IOUtils.closeQuietly(outputStream);
+            // Silently fail.
         } finally {
             IOUtils.closeQuietly(outputStream);
         }
@@ -87,7 +84,7 @@ public class RestletFileCache extends ExpirationFileCache<Reference, Representat
 
     private OutputStream getOutputStream(final File file) {
         try {
-            return new BufferedOutputStream(new FileOutputStream(file), BUFFER_SIZE);
+            return new FileOutputStream(file);
         } catch (final IOException e) {
             throw new RuntimeException(e);
         }
