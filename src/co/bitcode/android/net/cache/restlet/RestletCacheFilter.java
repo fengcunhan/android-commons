@@ -24,19 +24,21 @@ import android.content.Context;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.MediaType;
-import org.restlet.data.Reference;
 import org.restlet.representation.Representation;
+import org.restlet.resource.ClientResource;
 import org.restlet.routing.Filter;
 
 /**
  * A filter which serves responses from the cache. It tries to cache both images and JSON responses.
+ * 
+ * <strong>Make sure to enable entity buffering by calling
+ * {@link ClientResource#setEntityBuffering(boolean)}.</strong>
  * 
  * @since 1.0.0
  * @author Lorenzo Villani
  */
 public class RestletCacheFilter extends Filter {
     private static final String ZONE_ENTITY = "entity";
-    // CHECKSTYLE IGNORE ALL CHECKS NEXT LINE
     private static final String ZONE_IMAGE = "image";
     private static final int ENTITY_CACHE_SIZE = 100;
     private static final int IMAGE_CACHE_SIZE = 50;
@@ -71,40 +73,49 @@ public class RestletCacheFilter extends Filter {
 
     @Override
     protected int beforeHandle(final Request request, final Response response) {
-        for (final RestletFileCache cache : this.cachePool) {
-            final Representation cachedRepresentation = cache.get(request.getResourceRef());
+        final Representation cached = getCachedEntity(request);
 
-            if (cachedRepresentation != null) {
-                response.setEntity(cachedRepresentation);
+        if (cached != null) {
+            response.setEntity(cached);
 
-                return STOP;
-            }
+            return STOP;
+        } else {
+            return CONTINUE;
         }
-
-        return CONTINUE;
     }
 
     @Override
     protected void afterHandle(final Request request, final Response response) {
-        final Reference reference = request.getResourceRef();
-
-        if (response.isEntityAvailable()) {
+        if (!isCached(request) && response.isEntityAvailable()) {
             final MediaType mediaType = response.getEntity().getMediaType();
 
             if ("image".equals(mediaType.getMainType())) {
-                storeToCache(this.imageCache, reference, response);
-            } else if (MediaType.APPLICATION_JSON.equals(mediaType)) {
-                storeToCache(this.entityCache, reference, response);
+                store(this.imageCache, request, response);
             }
         }
     }
 
-    private void storeToCache(final RestletFileCache cache, final Reference reference,
-            final Response response) {
-        final Representation ret = new ByteArrayRepresentation(response.getEntity());
+    private boolean isCached(final Request request) {
+        for (final RestletFileCache cache : this.cachePool) {
+            if (cache.hasKey(request.getResourceRef())) {
+                return true;
+            }
+        }
 
-        cache.put(reference, ret);
+        return false;
+    }
 
-        response.setEntity(ret);
+    private Representation getCachedEntity(final Request request) {
+        for (final RestletFileCache cache : this.cachePool) {
+            if (cache.hasKey(request.getResourceRef())) {
+                return cache.get(request.getResourceRef());
+            }
+        }
+
+        return null;
+    }
+
+    private void store(final RestletFileCache cache, final Request request, final Response response) {
+        cache.put(request.getResourceRef(), response.getEntity());
     }
 }
