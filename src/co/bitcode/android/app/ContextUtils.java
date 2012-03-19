@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.view.LayoutInflater;
+import android.view.inputmethod.InputMethodManager;
 
 /**
  * Provides convenience methods to accomplish the most common tasks.
@@ -59,6 +60,18 @@ public final class ContextUtils {
      */
     public static ConnectivityManager getConnectivityManager(final Context context) {
         return getService(context, Context.CONNECTIVITY_SERVICE);
+    }
+
+    /**
+     * Return the handle to the input manager service.
+     * 
+     * @param context
+     *        The {@link Context}.
+     * @return The {@link ConnectivityManager}.
+     * @since 1.0.0
+     */
+    public static InputMethodManager getInputMethodManager(final Context context) {
+        return getService(context, Context.INPUT_METHOD_SERVICE);
     }
 
     /**
