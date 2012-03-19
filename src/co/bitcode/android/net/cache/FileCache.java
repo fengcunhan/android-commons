@@ -64,8 +64,8 @@ public abstract class FileCache<K, V> extends LruCache<K, V> {
      * @return <code>true</code> if <code>key</code> is in the cache, <code>false</code> otherwise.
      * @since 1.0.0
      */
-    public boolean hasKey(final K key) {
-        return getCacheFile(key).exists() || (get(key) != null);
+    public boolean has(final K key) {
+        return getCacheFile(key).exists();
     }
 
     /**
