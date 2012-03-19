@@ -23,6 +23,7 @@ import java.io.OutputStream;
 
 import android.content.Context;
 
+import co.bitcode.android.net.cache.ExpirationFileCache;
 import co.bitcode.android.net.cache.FileCache;
 
 import org.apache.commons.io.FileUtils;
@@ -38,7 +39,7 @@ import org.restlet.representation.Representation;
  * @since 1.0.0
  * @author Lorenzo Villani
  */
-public class RestletFileCache extends FileCache<Reference, Representation> {
+public class RestletFileCache extends ExpirationFileCache<Reference, Representation> {
     /**
      * Constructor.
      * 
@@ -48,12 +49,15 @@ public class RestletFileCache extends FileCache<Reference, Representation> {
      *        for caches that do not override {@link #sizeOf(Object, Object)}, this is the maximum
      *        number of entries in the cache. For all other caches, this is the maximum sum of the
      *        sizes of the entries in this cache.
+     * @param expiryTime
+     *        Cache expiration time.
      * @param cacheZone
      *        Cache zone name, without spaces and/or path separators.
      * @since 1.0.0
      */
-    public RestletFileCache(final Context context, final int maxSize, final String cacheZone) {
-        super(context, maxSize, cacheZone);
+    public RestletFileCache(final Context context, final int maxSize, final long expiryTime,
+            final String cacheZone) {
+        super(context, maxSize, expiryTime, cacheZone);
     }
 
     @Override
