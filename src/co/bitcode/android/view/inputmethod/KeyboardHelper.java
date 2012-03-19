@@ -16,12 +16,12 @@
 
 package co.bitcode.android.view.inputmethod;
 
-import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import co.bitcode.android.app.ContextUtils;
 import co.bitcode.android.view.inputmethod.impl.KeyboardHelperEditorActionListener;
 
 /**
@@ -37,14 +37,47 @@ public final class KeyboardHelper {
     /**
      * Hides the virtual keyboard.
      * 
+     * It is the same as calling {@link #setKeyboardVisible(View, false)}.
+     * 
      * @param view
      *        The {@link View} which caused the virtual keyboard to be shown.
      * @since 1.0.0
      */
     public static void hideKeyboard(final View view) {
-        final InputMethodManager inputMethodManager = (InputMethodManager) view.getContext()
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        setKeyboardVisible(view, false);
+    }
+
+    /**
+     * Shows the virtual keyboard.
+     * 
+     * It is the same as calling {@link #setKeyboardVisible(View, true)}.
+     * 
+     * @param view
+     *        The {@link View} which caused the virtual keyboard to be shown.
+     * @since 1.0.0
+     */
+    public static void showKeyboard(final View view) {
+        setKeyboardVisible(view, true);
+    }
+
+    /**
+     * Shows or hides the virtual keyboard.
+     * 
+     * @param view
+     *        The {@link View} which caused the virtual keyboard to be shown.
+     * @param isVisible
+     *        Whether the keyboard is shown or not.
+     * @since 1.0.0
+     */
+    public static void setKeyboardVisible(final View view, final boolean isVisible) {
+        final InputMethodManager imm = ContextUtils.getInputMethodManager(view.getContext());
+
+        if (isVisible) {
+            // See: http://stackoverflow.com/q/2712822
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        } else {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     /**
