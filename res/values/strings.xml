@@ -28,9 +28,9 @@
     <string name="intent_sendEmail">Send Email</string>
     <string name="previewpreference_notSet">Not set.</string>
     <string name="row_header_pulltorefresh_empty">Tap to refresh</string>
-    <string name="row_header_pulltorefresh_loading">Loading...</string>
-    <string name="row_header_pulltorefresh_pullDown">Pull down to refresh...</string>
-    <string name="row_header_pulltorefresh_release">Release to refresh...</string>
+    <string name="row_header_pulltorefresh_loading">Loading…</string>
+    <string name="row_header_pulltorefresh_pullDown">Pull down to refresh…</string>
+    <string name="row_header_pulltorefresh_release">Release to refresh…</string>
     <string name="view_fuzzydate_moments">Moments ago</string>
     <string name="view_fuzzydate_other">%s</string>
 </resources>
