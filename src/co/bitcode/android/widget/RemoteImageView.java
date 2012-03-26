@@ -31,6 +31,7 @@ import co.bitcode.android.widget.util.RemoteImageTask;
  */
 public abstract class RemoteImageView extends RoundedCornerImageView {
     private OnImageDownloaded onImageDownloaded;
+    private RemoteImageTask asyncTask;
 
     /**
      * Interface definition for a callback to be invoked when the RemoteImageView has finished
@@ -90,6 +91,20 @@ public abstract class RemoteImageView extends RoundedCornerImageView {
     }
 
     /**
+     * Cancels any pending asynchronous image downloading task.
+     * 
+     * @since 1.0.0
+     */
+    public void cancel() {
+        if ((this.asyncTask != null) && !this.asyncTask.isCancelled()) {
+            this.asyncTask.cancel(true);
+            this.asyncTask = null;
+
+            setImageResource(getNotFoundDrawable());
+        }
+    }
+
+    /**
      * Triggers an asynchronous image download.
      * 
      * @param uri
@@ -99,7 +114,7 @@ public abstract class RemoteImageView extends RoundedCornerImageView {
      */
     @Override
     public void setImageURI(final Uri uri) {
-        new RemoteImageTask(this) {
+        this.asyncTask = new RemoteImageTask(this) {
             @Override
             protected void onFinish(final Bitmap result) {
                 super.onFinish(result);
@@ -107,8 +122,11 @@ public abstract class RemoteImageView extends RoundedCornerImageView {
                 if (RemoteImageView.this.onImageDownloaded != null) {
                     RemoteImageView.this.onImageDownloaded.onImageDownloaded(result);
                 }
+
+                RemoteImageView.this.asyncTask = null;
             }
-        }.execute(uri);
+        };
+        this.asyncTask.execute(uri);
     }
 
     public void setOnImageDownloaded(final OnImageDownloaded onImageDownloaded) {
